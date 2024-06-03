@@ -18,9 +18,8 @@ transcribe_client = boto3.client('transcribe')
 class SpeechToTextResponse(BaseModel):
     msg: str
 
-class TextToSpeechRequest(BaseModel):
-  text: str = "이것은 예시 텍스트입니다."
-  voice_id: str = 'Seoyeon'
+class TextToSpeechResponse(BaseModel):
+    summary: list[str] = []
 
 BUCKET_NAME = 'kibwa08'
 PREFIX1 = 'dailysummaryspeech/'
@@ -71,13 +70,14 @@ async def speechToText():
         raise HTTPException(status_code=500, detail=str(error))
 
 @app.post("/texttospeech/")
-async def textToSpeech(request: TextToSpeechRequest):
+async def textToSpeech(request: TextToSpeechResponse):
     try:
+        summarytext = request.summary[0]
         # Amazon Polly 호출
         response = polly_client.synthesize_speech(
-            Text=request.text,
+            Text=summarytext,
             OutputFormat='mp3',
-            VoiceId=request.voice_id
+            VoiceId="Seoyeon",
         )
 
         # 오디오 스트림을 파일로 저장
@@ -120,11 +120,6 @@ async def streamAudio(date: str):
 
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format")
-
-@app.get("/dailychatdata/{date}")
-async def dailyChatData(date: str):
-    try:
-
 
 if __name__ == '__main__' :
   uvicorn.run(app, host="0.0.0.0", port=3000)
