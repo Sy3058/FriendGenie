@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>음성 인식 모드</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="index.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>음성 인식 모드</h1>
+      <div class="base-line"></div>
+    </header>
+
+    <div class="contents">
+      <section class="wrapper">
+        <div class="recognized-textarea">
+          <span class="final" id="final_span"></span>
+          <span class="interim" id="interim_span"></span>
+        </div>
+        <div class="Button-area">
+          <button class="mic">
+            회의 시작
+            <span id="recording-state"></span>
+          </button>
+          <button class="remove">위의 대본 삭제하기</button>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div class="base-line"></div>
+    </footer>
+  </body>
+</html>

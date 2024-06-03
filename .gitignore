@@ -1,0 +1,11 @@
+# .venv
+.venv
+
+# node
+node/node_modules
+node/package-lock.json
+node/conf/*
+
+# python
+python/__pycache__/
+python/*.mp3
