@@ -1,9 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import boto3
 import os
 import openai
+from base64 import b64encode
+from io import BytesIO
 from botocore.exceptions import ClientError, BotoCoreError
 from datetime import datetime
 
@@ -99,7 +101,7 @@ async def textToSpeech(request: TextToSpeechResponse):
         raise HTTPException(status_code=500, detail=str(error))
 
     return {"message": "Failed to convert text to speech"}
-    
+
 @app.get("/streamaudio/{date}")
 async def streamAudio(date: str):
     try:
@@ -112,19 +114,88 @@ async def streamAudio(date: str):
                 raise HTTPException(status_code=404, detail="File not found")
             else:
                 raise HTTPException(status_code=500, detail=str(error))    
-        def iterfile():
-            with open(filename, 'rb') as file:
-                yield from file
+        with open(filename, 'rb') as file:
+            audio_data = file.read()
         
-        return StreamingResponse(iterfile(), media_type='audio/mpeg')
+        blob = BytesIO(audio_data)
+        print(blob)
+        headers = {
+            'Content-Disposition': f'attachment; filename="{filename}"',
+            'Content-Type': 'audio/mpeg'
+        }
+
+        return {'audio_data' : blob}
 
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format")
 
-@app.post("/test")
-async def test(request):
-    print(request)
-    return request
+# @app.get("/streamaudio/{date}")
+# async def streamAudio(date: str):
+#     try:
+#         filename = f"{date}_output.mp3"
+#         filepath = f"{PREFIX1}{date}_output.mp3"
+#         try:
+#             s3_client.download_file(BUCKET_NAME, filepath, filename)
+#         except ClientError as error:
+#             if error.response['Error']['Code'] == "404":
+#                 raise HTTPException(status_code=404, detail="File not found")
+#             else:
+#                 raise HTTPException(status_code=500, detail=str(error))    
+#         with open(filename, 'rb') as file:
+#             audio_data = file.read()
+        
+#         base64_audio = b64encode(audio_data).decode('utf-8')
+#         return {'audio_data': base64_audio}
+
+#     except ValueError:
+#         raise HTTPException(status_code=400, detail="Invalid date format")
+
+# @app.get("/streamaudio/{date}")
+# async def streamAudio(date: str):
+#     try:
+#         filename = f"{date}_output.mp3"
+#         filepath = f"{PREFIX1}{date}_output.mp3"
+#         try:
+#             s3_client.download_file(BUCKET_NAME, filepath, filename)
+#         except ClientError as error:
+#             if error.response['Error']['Code'] == "404":
+#                 raise HTTPException(status_code=404, detail="File not found")
+#             else:
+#                 raise HTTPException(status_code=500, detail=str(error))    
+#         def iterfile():
+#             with open(filename, 'rb') as file:
+#                 yield from file
+#         print("집에가고싶다...")
+#         return StreamingResponse(iterfile(), media_type='audio/mpeg')
+
+#     except ValueError:
+#         raise HTTPException(status_code=400, detail="Invalid date format")
+
+@app.get("/checksummaryspeech/{date}")
+async def getSummarySpeech(date: str):
+    try:
+        filename = f"{date}_output.mp3"
+        filepath = f"{PREFIX1}{date}_output.mp3"
+        try:
+            s3_client.head_object(Bucket=BUCKET_NAME, Key=filepath)
+            print (f"File '{filepath}' exists in bucket '{BUCKET_NAME}'")
+            return True
+        except ClientError as error:
+            if eroor.response['Error']['Code'] == '404':
+                print(f"File '{filepath}' does not exist in bucket '{BUCKET_NAME}'")
+                return False
+            else:
+                print(f"Unexpected error: {error}")
+                return False
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format")
+
+@app.get("/audio/{date}")
+async def get_audio(date: str):
+    filename = f"{date}_output.mp3"
+    filepath = f"{PREFIX1}{filename}"
+    response = s3_client.get_object(Bucket=BUCKET_NAME, Key=filepath)
+    return Response(content=response['Body'].read(), media_type="audio/mpeg")
 
 if __name__ == '__main__' :
   uvicorn.run(app, host="0.0.0.0", port=3000)

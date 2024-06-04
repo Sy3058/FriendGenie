@@ -6,7 +6,6 @@ flatpickr(".calendar", {
   onChange: async function (selectedDates, dateStr, instance) {
     const selectedDateElement = document.getElementById("selected-date");
     selectedDateElement.innerText = `${dateStr}`;
-
     const summaryContainer = document.getElementById("summary-container");
     const summaryContent = document.getElementById("summary-content");
     // AJAX 요청 등을 통해 선택된 날짜에 해당하는 대화 요약본을 가져오는 코드
@@ -89,6 +88,8 @@ async function fetchSummary(selectedDate) {
     return "선택한 날짜의 요약을 가져오는 데 실패했습니다.";
   }
 }
+
+// Summary 를 TTS로 저장
 async function fetchSummarySpeech(selectedDate) {
   const selectedDateOnly = selectedDate.split("T")[0]; // 선택한 날짜에서 시간 정보 제거
   date = selectedDate.split("-").join("");
@@ -114,36 +115,40 @@ async function fetchSummarySpeech(selectedDate) {
   }
 }
 
-document.getElementById("volume-button").addEventListener("click", async () => {
-  try {
-    console.log("Volume button clicked");
-    console.log("Current Summary:", currentSummary);
-    console.log("Date:", date);
+function playSummarySpeech(selectedDate) {
+  const selectedDateOnly = selectedDate.split("T")[0];
+  const date = selectedDateOnly.split("-").join("");
 
-    const response = await fetch("/streamaudio", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ datestr: date }),
+  fetch(`/streamaudio/${date}`)
+    .then((response) => response.blob())
+    .then((blob) => {
+      const audioPlayer = document.getElementById("audioPlayer");
+      audioPlayer.src = URL.createObjectURL(blob);
+      audioPlayer.play();
+    })
+    .catch((error) => {
+      console.error("Error playing summary speech:", error);
     });
+}
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+let isPlaying = false;
+const audioPlayer = document.getElementById("audioPlayer");
 
-    const blob = await response.blob();
-    const audioUrl = URL.createObjectURL(blob);
-    const audioElement = document.querySelector("audio");
-    audioElement.src = audioUrl;
-    audioElement.load();
-    audioElement.play();
+const playAudioBtn = document.getElementById("playAudioBtn");
 
-    // 오디오 재생이 끝나면 메모리 해제
-    audioElement.addEventListener("ended", () => {
-      URL.revokeObjectURL(audioUrl);
-    });
-  } catch (error) {
-    console.error("Error streaming audio:", error);
+playAudioBtn.addEventListener("click", () => {
+  if (!audioPlayer) {
+    console.error("Audio player element not found");
+    return;
+  }
+  if (!isPlaying) {
+    const selectedDate = "2023-06-04"; // 선택한 날짜 값을 가져오는 로직
+    playSummarySpeech(selectedDate);
+    isPlaying = true;
+    playAudioBtn.textContent = "음성 멈춤";
+  } else {
+    audioPlayer.pause();
+    isPlaying = false;
+    playAudioBtn.textContent = "음성 재생";
   }
 });

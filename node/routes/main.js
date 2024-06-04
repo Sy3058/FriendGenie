@@ -47,23 +47,15 @@ app.post("/texttospeech", (req, res) => {
 });
 
 // audio stream
-app.post("/streamaudio/", (req, res) => {
-  const date = req.body.datestr;
+app.get("/streamaudio/:date", async (req, res) => {
+  const date = req.params.date;
+  const apiUrl = `http://43.203.206.180:3000/streamaudio/${date}`;
 
-  axios
-    .post(
-      "http://43.203.206.180:3000/streamaudio/",
-      { date },
-      { responseType: "stream" }
-    )
-    .then((response) => {
-      res.setHeader("Content-Type", "audio/mpeg");
-      response.data.pipe(res);
-    })
-    .catch((error) => {
-      console.error("Error streaming audio:", error);
-      res.status(500).send("Error streaming audio");
-    });
+  try {
+    const response = await axios.get(apiUrl, { responseType: "stream" });
+    response.data.pipe(res);
+  } catch (error) {
+    console.error("Error streaming audio:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
-
-app.get("");
