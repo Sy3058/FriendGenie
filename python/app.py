@@ -19,7 +19,8 @@ class SpeechToTextResponse(BaseModel):
     msg: str
 
 class TextToSpeechResponse(BaseModel):
-    summary: list[str] = []
+    summary: str
+    date: str
 
 BUCKET_NAME = 'kibwa08'
 PREFIX1 = 'dailysummaryspeech/'
@@ -72,20 +73,19 @@ async def speechToText():
 @app.post("/texttospeech/")
 async def textToSpeech(request: TextToSpeechResponse):
     try:
-        summarytext = request.summary[0]
         # Amazon Polly 호출
         response = polly_client.synthesize_speech(
-            Text=summarytext,
+            Text=request.summary,
             OutputFormat='mp3',
             VoiceId="Seoyeon",
         )
+        print(request)
 
         # 오디오 스트림을 파일로 저장
         audio_stream = response.get('AudioStream')
         if audio_stream:
             # 현재 날짜와 시간을 파일명에 추가
-            now = datetime.now()
-            filename = f"{now.strftime('%Y%m%d')}_output.mp3"
+            filename = f"{request.date}_output.mp3"
             with open(filename, 'wb') as file:
                 file.write(audio_stream.read())
 
@@ -120,6 +120,11 @@ async def streamAudio(date: str):
 
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format")
+
+@app.post("/test")
+async def test(request):
+    print(request)
+    return request
 
 if __name__ == '__main__' :
   uvicorn.run(app, host="0.0.0.0", port=3000)

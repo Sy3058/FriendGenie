@@ -81,3 +81,9 @@ body {
   margin-top: 20px;
   position: fixed;
 }
+#volume-button {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-right: 50px;
+}
