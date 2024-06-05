@@ -16,7 +16,7 @@ flatpickr("#calendar", {
     // 오디오 가져오는 코드
     const formattedDate = dateStr.split("-").join("");
     const audioSource = document.getElementById("audioSource");
-    audioSource.src = `http://localhost:3000/audio/${formattedDate}`;
+    audioSource.src = `http://localhost:3500/audio/${formattedDate}`;
     const audio = document.getElementById("audio");
     audio.load();
 
@@ -30,6 +30,7 @@ flatpickr("#calendar", {
           console.error("Error playing audio:", error);
         });
     });
+    playPauseCheckbox.checked = true;
   },
 });
 
@@ -42,7 +43,7 @@ async function fetchSummary(selectedDate) {
     if (selectedDateOnly === currentDate) {
       // 오늘의 날짜인 경우 /getchatfroms3 엔드포인트 호출
       const response = await fetch(
-        `http://3.36.52.133:3000/getchatfroms3?file_name=chat_log_${selectedDate}.json`
+        `http://localhost:3000/getchatfroms3?file_name=chat_log_${selectedDate}.json`
       );
       const data = await response.json();
       if (data.error) {
@@ -67,7 +68,7 @@ async function fetchSummary(selectedDate) {
     } else {
       // 오늘의 날짜가 아닌 경우 /getsummaryfroms3 엔드포인트 호출
       const response = await fetch(
-        `http://3.36.52.133:3000/getsummaryfroms3?file_name=chat_log_${selectedDate}.json`
+        `http://localhost:3000/getsummaryfroms3?file_name=chat_log_${selectedDate}.json`
       );
       const data = await response.json();
       console.log("getsummaryfroms3 response:", data);
@@ -75,7 +76,7 @@ async function fetchSummary(selectedDate) {
       if (data.error) {
         // S3에 파일이 없을 경우 /summarizechat 엔드포인트 호출
         const summarizeResponse = await fetch(
-          `http://3.36.52.133:3000/summarizechat?file_name=chat_log_${selectedDate}.json`
+          `http://localhost:3000/summarizechat?file_name=chat_log_${selectedDate}.json`
         );
         const summaryData = await summarizeResponse.json();
         console.log("summarizechat response:", summaryData);
@@ -114,7 +115,7 @@ async function fetchSummarySpeech(selectedDate) {
   currentSummary = await fetchSummary(selectedDateOnly);
   const summary = currentSummary;
   try {
-    const response = await fetch("/texttospeech", {
+    const response = await fetch("localhost:8500/texttospeech", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

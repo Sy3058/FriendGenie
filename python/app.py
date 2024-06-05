@@ -42,8 +42,8 @@ checkFolder(BUCKET_NAME, PREFIX1, response1)
 checkFolder(BUCKET_NAME, PREFIX2, response2)
 
 @app.get("/")
-def Hello():
-  return "Hello World!"
+async def getEnv():
+  return {"su_ip":su_ip, "ji_ip":ji_ip}
 
 @app.post("/speechtotext/", response_model=SpeechToTextResponse)
 async def speechToText():
@@ -156,4 +156,4 @@ async def get_audio(date: str):
     return Response(content=response['Body'].read(), media_type="audio/mpeg")
 
 if __name__ == '__main__' :
-  uvicorn.run(app, host="0.0.0.0", port=3000)
+  uvicorn.run(app, host="0.0.0.0", port=3500)
