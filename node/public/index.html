@@ -9,6 +9,7 @@
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
     <link rel="stylesheet" href="check.css" />
+    <link rel="icon" href="data:," />
   </head>
   <body>
     <div class="calendar-container">
@@ -19,15 +20,12 @@
       <!-- 선택된 날짜를 표시할 컨테이너 -->
       <div id="summary-container">
         <div class="summary-title">
-          요약<button id="playAudioBtn">
-            <i class="bi bi-volume-up-fill fs-3"></i>
-          </button>
-          <audio controls>
-            <source
-              src="http://localhost:3000/audio/20240604"
-              type="audio/mpeg"
-            />
+          요약
+          <p></p>
+          <audio id="audio">
+            <source id="audioSource" type="audio/mpeg" />
           </audio>
+          <button id="playPauseBtn">멈춤</button>
         </div>
         <div id="summary-content"></div>
         <!-- 대화 요약본을 표시할 컨테이너 -->

@@ -129,48 +129,6 @@ async def streamAudio(date: str):
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format")
 
-# @app.get("/streamaudio/{date}")
-# async def streamAudio(date: str):
-#     try:
-#         filename = f"{date}_output.mp3"
-#         filepath = f"{PREFIX1}{date}_output.mp3"
-#         try:
-#             s3_client.download_file(BUCKET_NAME, filepath, filename)
-#         except ClientError as error:
-#             if error.response['Error']['Code'] == "404":
-#                 raise HTTPException(status_code=404, detail="File not found")
-#             else:
-#                 raise HTTPException(status_code=500, detail=str(error))    
-#         with open(filename, 'rb') as file:
-#             audio_data = file.read()
-        
-#         base64_audio = b64encode(audio_data).decode('utf-8')
-#         return {'audio_data': base64_audio}
-
-#     except ValueError:
-#         raise HTTPException(status_code=400, detail="Invalid date format")
-
-# @app.get("/streamaudio/{date}")
-# async def streamAudio(date: str):
-#     try:
-#         filename = f"{date}_output.mp3"
-#         filepath = f"{PREFIX1}{date}_output.mp3"
-#         try:
-#             s3_client.download_file(BUCKET_NAME, filepath, filename)
-#         except ClientError as error:
-#             if error.response['Error']['Code'] == "404":
-#                 raise HTTPException(status_code=404, detail="File not found")
-#             else:
-#                 raise HTTPException(status_code=500, detail=str(error))    
-#         def iterfile():
-#             with open(filename, 'rb') as file:
-#                 yield from file
-#         print("집에가고싶다...")
-#         return StreamingResponse(iterfile(), media_type='audio/mpeg')
-
-#     except ValueError:
-#         raise HTTPException(status_code=400, detail="Invalid date format")
-
 @app.get("/checksummaryspeech/{date}")
 async def getSummarySpeech(date: str):
     try:

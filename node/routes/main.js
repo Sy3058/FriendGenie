@@ -45,17 +45,3 @@ app.post("/texttospeech", (req, res) => {
       }
     });
 });
-
-// audio stream
-app.get("/streamaudio/:date", async (req, res) => {
-  const date = req.params.date;
-  const apiUrl = `http://43.203.206.180:3000/streamaudio/${date}`;
-
-  try {
-    const response = await axios.get(apiUrl, { responseType: "stream" });
-    response.data.pipe(res);
-  } catch (error) {
-    console.error("Error streaming audio:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
