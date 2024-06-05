@@ -91,7 +91,7 @@ body {
   font-weight: bold;
   text-align: center; /* 중앙 정렬을 위해 추가 */
   position: absolute; /* chat-container를 기준으로 고정하기 위해 */
-  left: 10%;
+  left: 7%;
   top: 25%;
   transform: translateX(-45%); /* 가운데 정렬을 위해 50%만큼 이동 */
   margin-left: 15px;
@@ -119,6 +119,7 @@ body {
 .checkbox {
   position: relative;
   display: inline-block;
+  margin-right: 22px;
 }
 
 .checkbox:after,

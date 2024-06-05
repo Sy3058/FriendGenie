@@ -9,3 +9,5 @@ node/conf/*
 # python
 python/__pycache__/
 python/*.mp3
+
+.bashrc_new

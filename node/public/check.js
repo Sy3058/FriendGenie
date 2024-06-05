@@ -10,8 +10,10 @@ flatpickr("#calendar", {
     const summaryContainer = document.getElementById("summary-container");
     const summaryContent = document.getElementById("summary-content");
     // AJAX 요청 등을 통해 선택된 날짜에 해당하는 대화 요약본을 가져오는 코드
-    const summaryspeech = await fetchSummarySpeech(dateStr);
-    summaryContent.innerText = currentSummary;
+    await fetchSummarySpeech(dateStr);
+    if (currentSummary != "대화 기록이 없어요") {
+      summaryContent.innerText = currentSummary;
+    }
     summaryContainer.style.display = "flex";
     // 오디오 가져오는 코드
     const formattedDate = dateStr.split("-").join("");
@@ -39,6 +41,12 @@ async function fetchSummary(selectedDate) {
     let summary;
     const currentDate = new Date().toISOString().split("T")[0]; // 오늘의 날짜 가져오기
     const selectedDateOnly = selectedDate.split("T")[0]; // 선택한 날짜에서 시간 정보 제거
+    const summaryContainer = document.getElementById("summary-content");
+    const noSummaryImage = document.getElementById("no-summary-image");
+
+    // 기존 내용을 제거하여 초기 상태로 설정
+    summaryContainer.innerHTML = "";
+    noSummaryImage.style.display = "none";
 
     if (selectedDateOnly === currentDate) {
       // 오늘의 날짜인 경우 /getchatfroms3 엔드포인트 호출
@@ -47,7 +55,8 @@ async function fetchSummary(selectedDate) {
       );
       const data = await response.json();
       if (data.error) {
-        summary = "해당 날짜의 대화 기록이 없어요"; // 에러 메시지 반환
+        summary = "대화 기록이 없어요"; // 에러 메시지 반환
+        noSummaryImage.style.display = "block";
       } else {
         // 반환된 데이터를 JSON 형식으로 파싱
         const parsedData = JSON.parse(data);
@@ -82,7 +91,8 @@ async function fetchSummary(selectedDate) {
         console.log("summarizechat response:", summaryData);
 
         if (summaryData.error) {
-          summary = "해당 날짜의 대화 요약이 없어요"; // 에러 메시지 반환
+          summary = "대화 기록이 없어요"; // 에러 메시지 반환
+          noSummaryImage.style.display = "block";
         } else {
           if (Array.isArray(summaryData.summary)) {
             // 배열을 개행 문자로 연결하여 문자열로 변환하여 반환
@@ -115,7 +125,7 @@ async function fetchSummarySpeech(selectedDate) {
   currentSummary = await fetchSummary(selectedDateOnly);
   const summary = currentSummary;
   try {
-    const response = await fetch("localhost:8500/texttospeech", {
+    const response = await fetch("/texttospeech", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
