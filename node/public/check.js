@@ -1,7 +1,7 @@
 let currentSummary = ""; // 요약을 저장할 전역 변수
 let date = "";
 
-flatpickr(".calendar", {
+flatpickr("#calendar", {
   inline: true, // 달력을 항상 열려 있도록 설정
   onChange: async function (selectedDates, dateStr, instance) {
     const selectedDateElement = document.getElementById("selected-date");
@@ -139,9 +139,7 @@ const playPauseBtn = document.getElementById("playPauseBtn");
 playPauseBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
-    playPauseBtn.textContent = "멈춤";
   } else {
     audio.pause();
-    playPauseBtn.textContent = "재생";
   }
 });

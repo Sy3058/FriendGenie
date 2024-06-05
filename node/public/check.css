@@ -1,89 +1,110 @@
+@font-face {
+  font-family: "Ownglyph_ryuttung-Rg";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2405-2@1.0/Ownglyph_ryuttung-Rg.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+  font-family: Arial, sans-serif;
+}
+
 body {
   display: flex;
   justify-content: space-between;
-  width: 100vw;
   height: 100vh;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
 }
 
+#top-container {
+  width: 100%;
+  height: 20vh; /* 상단 컨테이너 높이 설정 */
+  background-color: #f0f0f0; /* 배경색 추가 */
+  display: flex;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 추가 */
+  position: fixed; /* 상단에 고정 */
+  top: 0;
+  left: 0;
+}
+#top-container p {
+  font-family: Freesentation-9Black;
+  font-size: 48px;
+  text-align: left;
+  margin-left: 60px;
+}
+
 ::-webkit-scrollbar {
-  display: None;
+  display: none;
 }
-
-.back-button {
-  display: flex;
-}
-
-.calendar-container {
-  position: relative; /* 상대 위치 설정 */
-  width: 30%;
-  height: 100%;
+#calendar-container {
+  position: relative;
+  width: 33.33vh;
+  /* 화면 높이의 1/3에 해당하는 높이 설정 */
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  margin-left: 50px;
+  padding: 20px;
+  margin-top: 10px;
+  margin-left: 30px;
 }
+
 .chat-container {
-  position: relative; /* 요약 타이틀의 상대적인 위치를 설정하기 위해 */
-  width: 70%;
-  height: 60%; /* 화면의 60% 높이를 차지하도록 설정 */
+  position: relative;
+  width: calc(100% - 70vh); /* 가로 길이를 줄이기 위해 수정 */
+  top: 25vh;
+  height: 60vh;
   display: flex;
-  flex-direction: column;
   border: 1px solid #ccc;
   border-radius: 20px;
-  padding: 10px;
+  padding: 50px;
   box-sizing: border-box;
-  margin: auto;
-  margin-right: 3%;
-  justify-content: flex-start;
-  align-items: center; /* 중앙 정렬을 위해 flex-start에서 center로 변경 */
-  overflow-y: auto;
+  margin: 20px;
+  margin-top: 40px;
+  margin-right: 100px;
 }
 #summary-container {
   width: 100%;
-  height: 100%; /* #chat-container의 높이에 맞추기 위해 추가 */
-  margin-top: 0px;
+  height: 95%;
+  margin-top: 20px;
   display: flex;
   flex-direction: row;
-  justify-content: center; /* 중앙 정렬을 위해 추가 */
-  align-items: center; /* 중앙 정렬을 위해 추가 */
+  overflow-y: scroll;
+  border-left: 1px solid #ccc;
 }
-.summary-title {
-  width: 4cm; /* 가로 폭을 4cm로 고정 */
-  height: 70%;
+#summary-title {
+  width: 20%;
+  height: 10%;
   font-weight: bold;
   text-align: center; /* 중앙 정렬을 위해 추가 */
-  border-right: 1px solid #ccc; /* 세로 구분선 추가 */
-  padding-right: 10px; /* 구분선과 텍스트 사이의 여백 추가 */
   position: absolute; /* chat-container를 기준으로 고정하기 위해 */
-  left: 0; /* chat-container의 좌측에 고정 */
+  left: 10%;
+  top: 25%;
+  transform: translateX(-45%); /* 가운데 정렬을 위해 50%만큼 이동 */
+  margin-left: 15px;
 }
 #summary-content {
-  overflow-y: scroll;
-  height: 70%;
-  margin-left: 4.5cm; /* 요약 타이틀의 너비 + 여백만큼 이동 */
+  padding: 0px 70px;
+  width: 80%;
+  height: 75%;
   flex-grow: 1;
 }
-.calendar {
+#calendar {
   width: 100%;
   height: 30%;
   border: none;
 }
 
 #selected-date {
-  background-color: white;
   font-size: 1.2em;
-  margin-bottom: 10px;
   text-align: center;
-  width: 60%;
+  width: 15%;
   margin-top: 20px;
-  position: fixed;
+  margin-right: 35px;
 }
-#volume-button {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  margin-right: 50px;
+#playPauseBtn {
+  position: relative; /* 요약 버튼의 위치를 절대 위치로 설정합니다. */
+  bottom: 0; /* 요약 제목 아래에 위치하도록 설정합니다. */
+  cursor: pointer;
+  margin-right: 50px; /* 요약 글자와의 간격 조정 */
 }
