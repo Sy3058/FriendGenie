@@ -134,11 +134,13 @@ async function fetchSummarySpeech(selectedDate) {
 
 // 오디오 재생 및 멈춤 처리
 const audio = document.getElementById("audio");
-const playPauseBtn = document.getElementById("playPauseBtn");
+const playPauseCheckbox = document.getElementById("playPauseCheckbox");
 
-playPauseBtn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play();
+playPauseCheckbox.addEventListener("change", () => {
+  if (playPauseCheckbox.checked) {
+    audio.play().catch((error) => {
+      console.error("Failed to play audio:", error);
+    });
   } else {
     audio.pause();
   }

@@ -9,6 +9,12 @@
   font-family: Arial, sans-serif;
 }
 
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
 body {
   display: flex;
   justify-content: space-between;
@@ -102,9 +108,86 @@ body {
   margin-top: 20px;
   margin-right: 35px;
 }
-#playPauseBtn {
+
+.checkbox {
+  position: relative;
+  display: inline-block;
+}
+
+.checkbox:after,
+.checkbox:before {
+  font-family: FontAwesome;
+  font-feature-settings: normal;
+  font-kerning: auto;
+  font-language-override: normal;
+  font-stretch: normal;
+  font-style: normal;
+  font-synthesis: weight style;
+  font-variant: normal;
+  font-weight: normal;
+  text-rendering: auto;
+}
+
+.checkbox label {
+  width: 45px;
+  height: 25px;
+  background: #ccc;
+  position: relative;
+  display: inline-block;
+  border-radius: 23px;
+  transition: 0.4s;
+}
+
+.checkbox label:after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  left: 0;
+  top: -2.5px;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 0 0 2.5px rgba(0, 0, 0, 0.2);
+  transition: 0.4s;
+}
+
+#playPauseCheckbox {
   position: relative; /* 요약 버튼의 위치를 절대 위치로 설정합니다. */
   bottom: 0; /* 요약 제목 아래에 위치하도록 설정합니다. */
   cursor: pointer;
-  margin-right: 50px; /* 요약 글자와의 간격 조정 */
+  opacity: 0;
+}
+
+#playPauseCheckbox:hover + label:after {
+  box-shadow: 0 1px 7.5px 0 rgba(0, 0, 0, 0.2),
+    0 1.5px 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+#playPauseCheckbox:checked + label:after {
+  left: 40px;
+}
+
+.checkbox label {
+  background: none;
+  border: 3px solid #555;
+  height: 25px;
+}
+
+.checkbox label:after {
+  background: #555;
+  box-shadow: none;
+  top: 2px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+}
+
+#playPauseCheckbox:checked + label {
+  border-color: #569ff7;
+}
+
+#playPauseCheckbox:checked + label:after {
+  background: #569ff7;
+  left: 23px;
 }

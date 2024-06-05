@@ -39,12 +39,14 @@
       <div id="summary-container">
         <div id="summary-title">
           요약
+          </p>
           <audio id="audio">
             <source id="audioSource" type="audio/mpeg" />
           </audio>
-          <button id="playPauseBtn">
-            <i class="bi bi-volume-up-fill"></i>
-          </button>
+          <div class="checkbox">
+            <input type="checkbox" id="playPauseCheckbox" checked />
+            <label for="playPauseCheckbox"></label>
+          </div>
         </div>
         <div id="summary-content"></div>
         <!-- 대화 요약본을 표시할 컨테이너 -->
