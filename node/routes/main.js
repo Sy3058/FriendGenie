@@ -9,6 +9,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const SU_IP = process.env.SU_IP || 8500;
+const JI_IP = process.env.JI_IP || 8000;
+
 module.exports = app;
 
 // summarytts
