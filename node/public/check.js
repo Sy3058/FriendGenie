@@ -1,5 +1,18 @@
 let currentSummary = ""; // 요약을 저장할 전역 변수
 let date = "";
+let serverip = "";
+let su_ip = "";
+let ji_ip = "";
+window.onload = function() {
+  fetchIPs().then(serverip => {
+    su_ip = serverip.su_ip;
+    ji_ip = serverip.ji_ip;
+    console.log('su_ip:', su_ip);
+    console.log('ji_ip:', ji_ip);
+  }).catch(error => {
+    console.error('Failed to fetch IPs:', error);
+  });
+}
 
 flatpickr("#calendar", {
   inline: true, // 달력을 항상 열려 있도록 설정
@@ -18,7 +31,7 @@ flatpickr("#calendar", {
     // 오디오 가져오는 코드
     const formattedDate = dateStr.split("-").join("");
     const audioSource = document.getElementById("audioSource");
-    audioSource.src = `http://localhost:3500/audio/${formattedDate}`;
+    audioSource.src = `http://${su_ip}:3500/audio/${formattedDate}`;
     const audio = document.getElementById("audio");
     audio.load();
 
@@ -51,7 +64,7 @@ async function fetchSummary(selectedDate) {
     if (selectedDateOnly === currentDate) {
       // 오늘의 날짜인 경우 /getchatfroms3 엔드포인트 호출
       const response = await fetch(
-        `http://localhost:3000/getchatfroms3?file_name=chat_log_${selectedDate}.json`
+        `http://${ji_ip}:3000/getchatfroms3?file_name=chat_log_${selectedDate}.json`
       );
       const data = await response.json();
       if (data.error) {
@@ -77,7 +90,7 @@ async function fetchSummary(selectedDate) {
     } else {
       // 오늘의 날짜가 아닌 경우 /getsummaryfroms3 엔드포인트 호출
       const response = await fetch(
-        `http://localhost:3000/getsummaryfroms3?file_name=chat_log_${selectedDate}.json`
+        `http://${ji_ip}:3000/getsummaryfroms3?file_name=chat_log_${selectedDate}.json`
       );
       const data = await response.json();
       console.log("getsummaryfroms3 response:", data);
@@ -85,7 +98,7 @@ async function fetchSummary(selectedDate) {
       if (data.error) {
         // S3에 파일이 없을 경우 /summarizechat 엔드포인트 호출
         const summarizeResponse = await fetch(
-          `http://localhost:3000/summarizechat?file_name=chat_log_${selectedDate}.json`
+          `http://${ji_ip}:3000/summarizechat?file_name=chat_log_${selectedDate}.json`
         );
         const summaryData = await summarizeResponse.json();
         console.log("summarizechat response:", summaryData);
@@ -124,6 +137,8 @@ async function fetchSummarySpeech(selectedDate) {
   date = selectedDate.split("-").join("");
   currentSummary = await fetchSummary(selectedDateOnly);
   const summary = currentSummary;
+  console.log(JSON.stringify({ summary: currentSummary, datestr: date}))
+
   try {
     const response = await fetch("/texttospeech", {
       method: "POST",
@@ -134,7 +149,8 @@ async function fetchSummarySpeech(selectedDate) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to send summary to text-to-speech service");
+      const errorText = await response.text();
+      throw new Error(`Failed to send summary to text-to-speech service: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     console.log("Summary sent to text-to-speech service");
@@ -156,3 +172,17 @@ playPauseCheckbox.addEventListener("change", () => {
     audio.pause();
   }
 });
+
+async function fetchIPs() {
+  try {
+    const response = await fetch("/ip", { method: "POST" });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return { su_ip: data.su_ip, ji_ip: data.ji_ip };
+  } catch (error) {
+    console.error("Failed to fetch IPs:", error);
+    return { su_ip: "", ji_ip: "" };
+  }
+}
