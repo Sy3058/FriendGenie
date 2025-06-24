@@ -68,16 +68,13 @@
 ## <span id="function">5. 페이지별 기능</span>
 
 ### [메인 페이지]
-![레이아웃명세서1](https://github.com/user-attachments/assets/29dc9f3d-81fe-4cda-bd03-626180747285)
-
+![레이아웃명세서1](https://github.com/user-attachments/assets/604327de-201f-443e-9ce0-9dc76a5df5d3)
 
 ### [이전 대화 기록]
 ![레이아웃명세서2](https://github.com/user-attachments/assets/a5106a5d-f0bb-45e9-9738-295cfe8eea48)
 
-
 ### [당일 대화 기록]
 ![레이아웃명세서3](https://github.com/user-attachments/assets/10445a90-90ad-4884-86d3-b2797bc16691)
-
 
 <br>
 
