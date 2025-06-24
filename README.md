@@ -1,4 +1,4 @@
-# 대화가 필요한 당신에게 필요한 챗봇 서비스, 오, 릴리? (Oh, really?)
+# 💬대화가 필요한 당신에게. "오, 릴리?" (Oh, really?)
 
 ![MainPage](https://github.com/user-attachments/assets/06316ee6-2ae2-4d71-87a4-16589d54af59)
 
